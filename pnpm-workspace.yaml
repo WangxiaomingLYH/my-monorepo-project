@@ -1,0 +1,4 @@
+# packages: 存放公共库  apps: 存放子项目
+packages:
+  - 'packages/*'
+  - 'apps/*'

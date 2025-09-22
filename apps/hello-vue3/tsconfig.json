@@ -1,0 +1,17 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ],
+  "compilerOptions": {
+    "target": "ES2020",  // 转译为ES2020, 支持node 14+
+    "strict": true, // 开启严格检查
+    "noImplicitAny": true, // 不允许使用隐式any
+    "noEmitOnError": true
+  },
+}

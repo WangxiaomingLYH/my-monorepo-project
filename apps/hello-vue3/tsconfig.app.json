@@ -1,0 +1,24 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": [ // 包含的文件夹
+    "env.d.ts",
+    "src/**/*",
+    "src/**/*.vue"
+  ],
+  "exclude": [ // 排除的文件夹
+    "src/**/__tests__/*"
+  ],
+  "compilerOptions": { // 编译器选项
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "strict": true, // 开启严格检查
+    "noImplicitAny": true, // 不允许使用隐式any
+    "noEmitOnError": true
+  }
+}
