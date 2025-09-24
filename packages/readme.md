@@ -43,6 +43,7 @@ packages 目录下存放公共库
    2. 所以不管是什么项目, 都建议使用 vite 进行打包之后使用, 模拟上传到 npm 的状态
 
    3. 推荐命名方式 @wxm/utils-lib @wxm/ui-lib
+      1. **如果 package.json 的 name 属性命名为 @wxm/xxx-lib, 那么即使声明了这是公共, 也会被 npm 认为是私有包, 所以建议使用命名方式为: wxm-xxx-lib**, 当然使用公司的账号就没问题了
 
 
 ## 新建纯 TS 公共库
@@ -91,7 +92,7 @@ packages 目录下存放公共库
 
    3. 下面的配置文件, 将打包后的文件输出到 dist 目录下, 所以还需要在 package.json 文件里指向可访问路径
 
-      1. 可以通过不同的引入方式, 判断要消费者是 ES Modules 还是 Common JS 或者是 TS 导入类型
+      1. 可以通过不同的引入方式, 判断要消费者是 ES Modules 还是 Common JS
 
          ```
          // vite.config.ts 文件
@@ -114,8 +115,7 @@ packages 目录下存放公共库
          "exports": {
            ".": {
              "import": "./dist/my-lib.es.js",
-             "require": "./dist/my-lib.cjs.js",
-             "types": "./dist/index.d.ts"
+             "require": "./dist/my-lib.cjs.js"
            }
          },
          ```
@@ -140,8 +140,7 @@ packages 目录下存放公共库
         "exports": {
           ".": {
             "import": "./dist/my-lib.es.js",
-            "require": "./dist/my-lib.cjs.js",
-            "types": "./dist/index.d.ts"
+            "require": "./dist/my-lib.cjs.js"
           }
         },
         "files": [
@@ -166,9 +165,21 @@ packages 目录下存放公共库
          @wxm:registry=https://registry.npmjs.org/
          ```
 
-      2. 然后就正常的打包项目, 打包完成后执行命令: `npm publish --access public`
+      2. 然后需要在 package.json 中添加配置, 声明这是一个公共的包
 
-      3. 注意!: 千万不要把 .npmmr 提交到 github 上, 所以需要在项目根目录的 .gitignore 文件里添加配置
+         ```
+           "publishConfig": {
+             "access": "public"
+           },
+         ```
+
+      3. 然后就正常的打包项目, 打包完成后执行命令: `npm publish --access public`
+
+         1. 首次打包可能会失败, 需要执行 npm adduser 信任这台设备. 建议改回 npm 官方源, 否则可能卡在登录这一步
+         2. 在打包的过程中发现, **如果 package.json 的 name 属性命名为 @wxm/xxx-lib, 那么即使声明了这是公共, 也会被 npm 认为是私有包, 所以建议使用命名方式为: wxm-xxx-lib** 
+         3. 每次打包发布, 版本号都需要增加, 否则会报错
+
+      4. 注意!: 千万不要把 .npmmr 提交到 github 上, 所以需要在项目根目录的 .gitignore 文件里添加配置
 
          ```
          # 忽略本地 npm 凭证文件

@@ -1,6 +1,6 @@
 {
-  "name": "@wxm/utils-lib",
-  "version": "1.0.0",
+  "name": "wxm-utils-lib",
+  "version": "1.0.02",
   "description": "实用工具函数",
   "type": "module",
   "main": "./dist/my-lib.cjs.js",
@@ -13,13 +13,15 @@
   "exports": {
     ".": {
       "import": "./dist/my-lib.es.js",
-      "require": "./dist/my-lib.cjs.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/my-lib.cjs.js"
     }
   },
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [],
   "author": "wxm",
   "license": "MIT",
