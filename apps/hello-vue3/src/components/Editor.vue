@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { add } from "wxm-utils-lib"
 console.log(add(1), "@add(1)")
+
+
 </script>
 
 <template>
