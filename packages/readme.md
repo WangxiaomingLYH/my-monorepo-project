@@ -123,6 +123,14 @@ packages 目录下存放公共库
          },
          ```
 
+   6. 当然还可以让打包后的文件去掉所有的注释信息, 以及 console.log
+
+      ```
+      
+      ```
+
+      
+
 6. 此时就能够将该公共库上传到 npm 了, 同时也不会影响本地通过 pnpm workspace 模式直接访问. 发布到 npm, 需要进行如下配置
 
    1. version 每次发布必须递增版本号; main 指向打包后的 cjs.js 文件作为 CommonJS 入口; module 指向打包后的 .es.js 文件作为 ESModule 入口; type 指向打包后的 .d.ts 文件作为类型定义文件入口; files 只发布打包后的文件, 不包含源码
