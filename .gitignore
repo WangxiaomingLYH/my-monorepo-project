@@ -13,6 +13,9 @@ dist/
 build/
 lib/
 
+# 忽略本地 npm 凭证文件
+.npmrc
+
 # 📁 pnpm 专用缓存/日志
 .pnpm-debug.log*
 .pnpm-store/

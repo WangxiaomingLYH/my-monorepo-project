@@ -1,13 +1,12 @@
 <script setup lang="ts">
-
+import { log } from "@wxm/utils-lib"
+log()
 </script>
 
 <template>
-<div class="">
+  <div class="">
     <h1>111111111</h1>
-</div>
+  </div>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

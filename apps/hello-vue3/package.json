@@ -31,7 +31,8 @@
     "vue-router": "^4.4.5",
     "vue3-captcha": "^0.3.4",
     "vue3-recaptcha2": "^1.8.0",
-    "vuetify": "^3.8.11"
+    "vuetify": "^3.8.11",
+    "@wxm/utils-lib": "workspace:*"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",
