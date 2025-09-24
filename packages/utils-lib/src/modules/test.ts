@@ -1,3 +1,4 @@
-export function log() {
-    console.log("!!!!!!!!!!---------11111111---")
+export function add(value: number) {
+    console.log("测试库完成")
+    return (value + 1)
 }

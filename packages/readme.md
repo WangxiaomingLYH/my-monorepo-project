@@ -94,6 +94,8 @@ packages 目录下存放公共库
 
       1. 可以通过不同的引入方式, 判断要消费者是 ES Modules 还是 Common JS
 
+      2. 添加 "types": "./dist/index.d.ts" 是为了让消费端获取类型声明, 虽然在 build 时会提示该配置项无效
+
          ```
          // vite.config.ts 文件
          import { defineConfig } from 'vite';
@@ -115,7 +117,8 @@ packages 目录下存放公共库
          "exports": {
            ".": {
              "import": "./dist/my-lib.es.js",
-             "require": "./dist/my-lib.cjs.js"
+             "require": "./dist/my-lib.cjs.js",
+             "types": "./dist/index.d.ts"
            }
          },
          ```
@@ -140,7 +143,8 @@ packages 目录下存放公共库
         "exports": {
           ".": {
             "import": "./dist/my-lib.es.js",
-            "require": "./dist/my-lib.cjs.js"
+            "require": "./dist/my-lib.cjs.js",
+            "types": "./dist/index.d.ts"
           }
         },
         "files": [
