@@ -6,16 +6,11 @@ import Components from 'unplugin-vue-components/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), Components({
-    dirs: ['src/components'],
-    extensions: ['vue'],
-    deep: true,
-    dts: true
-  })],
+  plugins: [vue()],
 
   build: {
     lib: {
-      entry: path.resolve(__dirname, './src/index.ts'),
+      entry: path.resolve(__dirname, './src/lib/index.ts'),
       name: 'WxmUi',
       fileName: (format) => `wxm-ui.${format}.js`,
       formats: ['es', 'umd']
