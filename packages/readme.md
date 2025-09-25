@@ -309,7 +309,7 @@ npm publish --access public
    "license": "MIT",
    ```
 
-   
+5. 然后就像正常的 vue 项目一样, 安装注册 element-plus 等组件库即可
 
 
 
