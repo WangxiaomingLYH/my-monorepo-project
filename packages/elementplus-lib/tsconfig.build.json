@@ -1,0 +1,12 @@
+// tsconfig.build.json
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "outDir": "./dist"
+  },
+  "include": ["src/lib/**/*","src/type.d.ts"]
+}

@@ -6,6 +6,9 @@
   "main": "./dist/my-lib.cjs.js",
   "module": "./dist/my-lib.es.js",
   "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "vite build && tsc"
@@ -20,9 +23,6 @@
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "keywords": [],
   "author": "wxm",
   "license": "MIT",
