@@ -12,7 +12,7 @@ export default defineConfig({
       entry: path.resolve(__dirname, './src/lib/index.ts'),
       name: 'WxmUi',
       fileName: (format) => `wxm-ui.${format}.js`,
-      formats: ['es', 'umd']
+      formats: ['es', 'cjs', 'umd']
     },
     rollupOptions: {
       external: ['vue', 'element-plus'],

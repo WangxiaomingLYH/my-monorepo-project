@@ -1,5 +1,13 @@
 packages 目录下存放公共库
 
+## 上传到 npm 命令
+
+```
+npm publish --access public
+```
+
+
+
 ## 公共库方法的导出方式
 
 1. 直接导出即可
@@ -46,7 +54,7 @@ packages 目录下存放公共库
       1. **如果 package.json 的 name 属性命名为 @wxm/xxx-lib, 那么即使声明了这是公共, 也会被 npm 认为是私有包, 所以建议使用命名方式为: wxm-xxx-lib**, 当然使用公司的账号就没问题了
 
 
-## 新建纯 TS 公共库
+## 新建纯 TS + VITE 公共库
 
 1. 初始化仓库并修改 name: pnpm init, 然后将 name 属性改为 @wxm/xxx-lib 格式
 2. 开发环境安装 vite typescript: `pnpm add -D vite typescript`
@@ -200,9 +208,108 @@ packages 目录下存放公共库
 
 
 
-## 新建一个 elementplus-lib 组件库
+## 新建 vite + vue 公共库
 
-创建一个 vue 项目: `pnpm create vite`
+创建一个 vue 项目: `pnpm create vite` 后, 改造成一个公共库的流程和纯 TS + vite 项目差别不大, 不过有一下几点区别
+
+1. 由于可能需要本地测试组件库, 所以一般是在 src/lib 里新建 index.ts 文件, 在该文件中进行如下的配置
+
+   1. 这基本是一个固定的写法, 通过命名导出的方式, 让消费端可以按需引入组件
+   2. 通过默认暴露全局注册方法, 让组件库可以像 Vue 插件一样使用 `app.use(...)` 注册所有组件为全局组件
+   3. 因此在 vite.config.ts 文件中, 打包该文件后的文件就是组件库的入口文件, 所以 vite.config.ts 文件和纯 TS 文件的差别不大, 只需要关注 lib 配置项即可
+
+   ```
+   import type { App } from "vue";
+   import Table from "./Table/Table.vue";
+   
+   // 命名导出, 允许用户按需导入单个文件: `import { Table } from '自定义组件库'`
+   export {
+       Table
+   }
+   
+   // 类型导出
+   // export * from './types';
+   
+   const components = [Table]
+   
+   // 默认导出全局组件注册方法. 当用户使用 app.use('自定义组件库') 时, 会自动调用 install 方法, 将所有组件注册为全局组件
+   export default {
+       install(app: App) {
+           components.forEach(component => {
+               component.name && app.component(component.name, component)
+           })
+       }
+   }
+   ```
+
+2. 由于 TypeScript 默认并不认识 `.vue` 文件, 除非你明确告诉它 `.vue` 是模块，并且它们导出的是一个 Vue 组件, 所以需要新建 src/type.d.ts 文件, 并如下设置.
+
+   ```
+   declare module '*.vue' {
+     import { DefineComponent } from 'vue'
+     const component: DefineComponent<{}, {}, any>
+     export default component
+   }
+   
+   ```
+
+3. 由于现在的 vue 项目的 tsconfig.json 都是通过按照参考来的, 所以需要自己额外新建一个 tsconfig.build.json 文件, 专门用来配置 tsc 的行为. 此时就能正常的生成 .d.ts 文件了
+
+   1. 记得选中上一步新建的 src/type.d.ts 文件
+
+   ```
+   {
+     "extends": "./tsconfig.app.json",
+     "compilerOptions": {
+       "declaration": true,
+       "declarationDir": "./dist/types",
+       "emitDeclarationOnly": true,
+       "noEmit": false,
+       "outDir": "./dist"
+     },
+     "include": ["src/lib/**/*","src/type.d.ts"]
+   }
+   
+   ```
+
+   1. 然后在 package.json 文件中, 显式的使用
+
+   ```
+   "scripts": {
+       "build": "vite build && tsc -p tsconfig.build.json",
+   },
+   ```
+
+4. 此时打包组件和打包类型声明文件的操作都完成了, 然后就是上传到 npm 的配置
+
+   ```
+   // 配置版本号, 入口文件 类型声明文件等的配置
+   "name": "wxm-elementplus-lib",
+   "version": "0.0.2",
+   "description": "自定义组件库",
+   "main": "./dist/wxm-ui.umd.js",
+   "module": "./dist/wxm-ui.es.js",
+   "types": "./dist/types/index.d.ts",
+   "publishConfig": {
+     "access": "public"
+   },
+   
+   // 配置可访问路径, 上传到 npm 目录, 作者信息及开源协议的配置
+   "exports": {
+     ".": {
+       "import": "./dist/wxm-ui.es.js",
+       "require": "./dist/wxm-ui.umd.js",
+       "types": "./dist/types/index.d.ts"
+     }
+   },
+   "files": [
+     "dist"
+   ],
+   "author": "wxm",
+   "license": "MIT",
+   ```
+
+   
 
 
 
