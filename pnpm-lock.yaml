@@ -269,6 +269,9 @@ importers:
       vue:
         specifier: ^3.5.21
         version: 3.5.21(typescript@5.8.3)
+      wxm-utils-lib:
+        specifier: workspace:*
+        version: link:../utils-lib
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^6.0.1
