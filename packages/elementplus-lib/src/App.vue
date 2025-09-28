@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Table from './lib/Table/Table.vue';
+import Demo from "./components/Demo.vue";
 </script>
 
 <template>
-  <Table></Table>
+  <Demo />
 </template>
 
 <style scoped lang="scss"></style>

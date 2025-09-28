@@ -1,51 +1,16 @@
 <script setup lang="ts">
-import {
-    Check,
-    Delete,
-    Edit,
-    Search,
-} from '@element-plus/icons-vue'
 import { ElButton } from 'element-plus';
-import { ClassButtonOptions, createButtonOptions } from "./extend/Class-Options";
 
+const props = defineProps<{
+    options: any[]
+}>()
 
-const options: Partial<ClassButtonOptions>[] = createButtonOptions([
-    {
-        props: {
-            circle: true,
-            icon: Edit,
-            type: 'primary'
-        }
-    },
-    // {
-    //     props: {
-    //         circle: true,
-    //         icon: Check,
-    //         loading: true
-    //     }
-    // },
-    // {
-    //     props: {
-    //         circle: true,
-    //         icon: Delete,
-    //         type: 'danger'
-    //     },
-    // },
-    // {
-    //     id: 'search',
-    //     innerHTML: '搜索全部数据',
-    //     props: {
-    //         icon: Search,
-    //         type: 'info',
-    //     }
-    // }
-])
-
+// const targetOptions = createButtonOptions(props.options)
 
 // 给配置项注入点击事件
 // 在配置项上, 因为还没有经过 ClassButtonOptions 实例化, 所以拿不到该实例对象
 // 需要经过实例化之后, options 变成由 ClassButtonOptions 实例组成的数组 
-options.forEach((classButtonOption) => {
+props.options.forEach((classButtonOption) => {
     // 此时的 btn 是 ClassButtonOptions 实例化
 
     // 合并配置项方法
