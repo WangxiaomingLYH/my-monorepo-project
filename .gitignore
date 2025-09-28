@@ -11,7 +11,7 @@ coverage/
 # 🧱 构建产物（前端或库的构建输出）
 dist/
 build/
-lib/
+# lib/  我的组件库代码中使用到了 lib 这个目录, 并且打包后的目录是 dist, 所以需要上传该目录
 
 # 忽略本地 npm 凭证文件
 .npmrc
