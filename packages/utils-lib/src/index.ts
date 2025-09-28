@@ -2,3 +2,5 @@
 
 export { add } from "./modules/test.js"
 export { default as vCopy } from "./modules/v-copy.js"
+
+console.log("!!!!")
