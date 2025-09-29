@@ -15,27 +15,27 @@ import { ClassButtonOptions, createButtonOptions } from "../lib/ButtonGroup/exte
 
 const { total, rows } = TableData
 const buttonGrounpOptions: Partial<ClassButtonOptions>[] = createButtonOptions([
-    {
-        props: {
-            circle: true,
-            icon: Edit,
-            type: 'primary'
-        }
-    },
-    {
-        props: {
-            circle: true,
-            icon: Check,
-            loading: true
-        }
-    },
-    {
-        props: {
-            circle: true,
-            icon: Delete,
-            type: 'danger'
-        },
-    },
+    // {
+    //     props: {
+    //         circle: true,
+    //         icon: Edit,
+    //         type: 'primary'
+    //     }
+    // },
+    // {
+    //     props: {
+    //         circle: true,
+    //         icon: Check,
+    //         loading: true
+    //     }
+    // },
+    // {
+    //     props: {
+    //         circle: true,
+    //         icon: Delete,
+    //         type: 'danger'
+    //     },
+    // },
     {
         id: 'search',
         innerHTML: '搜索全部数据',
