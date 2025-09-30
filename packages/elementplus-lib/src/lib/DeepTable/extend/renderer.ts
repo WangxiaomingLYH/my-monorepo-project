@@ -1,6 +1,11 @@
 // renderer.ts
-import { h, resolveComponent, type VNode } from 'vue'
-import type { BaseComponentConfig, ComponentConfig } from './type'
+import { h, resolveComponent, type VNode, type Component } from 'vue'
+import type { 
+  BaseComponentConfig, 
+  ComponentConfig, 
+  TextComponentConfig, 
+  NativeElementConfig 
+} from './types'
 
 export class ComponentRenderer {
   /**
@@ -17,6 +22,11 @@ export class ComponentRenderer {
       if (!shouldRender) return h('div')
     }
 
+    // 处理文本节点
+    if (this.isTextConfig(config)) {
+      return h('span', config.props?.text || '')
+    }
+
     const {
       component,
       props = {},
@@ -26,7 +36,7 @@ export class ComponentRenderer {
       children,
       slots,
       dynamicProps = {}
-    } = config
+    } = config as BaseComponentConfig
 
     // 处理动态属性
     Object.keys(dynamicProps).forEach(key => {
@@ -47,9 +57,7 @@ export class ComponentRenderer {
     }
 
     // 解析组件
-    const resolvedComponent = typeof component === 'string'
-      ? resolveComponent(component)
-      : component
+    const resolvedComponent = this.resolveComponent(component)
 
     // 处理子节点
     const childrenNodes = this.renderChildren(children, row, index)
@@ -70,6 +78,29 @@ export class ComponentRenderer {
         ...slotNodes
       }
     )
+  }
+
+  /**
+   * 判断是否为文本配置
+   */
+  private static isTextConfig(config: ComponentConfig): config is TextComponentConfig {
+    return config.component === 'text'
+  }
+
+  /**
+   * 解析组件
+   */
+  private static resolveComponent(component: string | Component): Component | string {
+    if (typeof component === 'string') {
+      // 如果是原生 HTML 标签，直接返回字符串
+      const nativeElements = ['div', 'span', 'button', 'a', 'p', 'i', 'strong', 'em']
+      if (nativeElements.includes(component)) {
+        return component
+      }
+      // 否则认为是 Element Plus 组件
+      return resolveComponent(component)
+    }
+    return component
   }
 
   /**
