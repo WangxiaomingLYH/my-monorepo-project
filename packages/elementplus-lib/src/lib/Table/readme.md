@@ -37,3 +37,15 @@
     }
 },
 ```
+
+1. 渲染自定义组件
+可以直接通过 v-bind 的方式传递配置项给自定义组件
+然后自定义数组声明一个 definedProps 用于接收
+v-bind（用于传 props）时，如果你没声明，Vue 会退而求其次当成 HTML attr
+
+
+
+1. 解决loading状态混乱的问题
+通过 createButtonOptions 生成的 ClassButtonOptions 实例对象组成的数组, 可以通过 props 的方式传递给 RecursiveComponent 组件, 通过 v-bind 自动展开后, 在 ClassButtonOptions 组件中声明 options 是一个 props, 然后就能把 通过 createButtonOptions 生成的 ClassButtonOptions 实例对象组成的数组 传递给 buttongrounp 组件了
+如果遇到了多个列表渲染, buttongrounp 组件引用同一个数组对象会导致状态混乱, 所有该数组对象需要使用函数的方式生成
+函数的方式生成, 如果都是引用同一个静态对象的话, 生成的还是同一个引用对象; 所以需要使用深度克隆的方式, 让引用同一个静态对象的函数, 生成不同的引用地址!!!!!!!!!!!!!!!!!!!!!!

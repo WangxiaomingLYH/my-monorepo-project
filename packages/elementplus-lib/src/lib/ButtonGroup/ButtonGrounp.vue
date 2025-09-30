@@ -29,7 +29,7 @@ props.options.forEach((classButtonOption) => {
         click: async () => {
             changePropsLoading(true)
             // 模拟延迟操作, 这里可以直接传入一个 Promise 方法, 等待 then 执行完成后, 再让 loading 属性为 false
-            await promiseFn
+            await promiseFn()
             changePropsLoading()
         }
     })
@@ -45,11 +45,15 @@ props.options.forEach((classButtonOption) => {
 })
 
 //  把点击事件需要的操作封装成一个异步方法
-const promiseFn = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        resolve('成功')
-    }, 3000)
-})
+function promiseFn(): Promise<string> {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            console.log('3 秒过去了')
+            resolve('成功')
+        }, 3000)
+    })
+}
+
 
 
 </script>
