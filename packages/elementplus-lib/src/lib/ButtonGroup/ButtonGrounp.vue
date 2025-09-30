@@ -27,9 +27,9 @@ props.options.forEach((classButtonOption) => {
     // 批量添加通用点击方法, 应该需要传递一个异步函数, 直接结束后, loading=false
     mergeEvents({
         click: async () => {
-            // changePropsLoading(true)
+            changePropsLoading(true)
             // 模拟延迟操作, 这里可以直接传入一个 Promise 方法, 等待 then 执行完成后, 再让 loading 属性为 false
-            // await promiseFn
+            await promiseFn
             changePropsLoading()
         }
     })

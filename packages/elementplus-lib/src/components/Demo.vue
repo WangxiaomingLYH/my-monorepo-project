@@ -12,30 +12,31 @@ import Table from "../lib/Table/Table.vue";
 import { type TableColumnConfig } from "../lib/Table/extend/index";
 import ButtonGrounp from "../lib/ButtonGroup/ButtonGrounp.vue"
 import { ClassButtonOptions, createButtonOptions } from "../lib/ButtonGroup/extend/Class-Options"
+import _ from "lodash";
 
-const { total, rows } = TableData
-const buttonGrounpOptions: Partial<ClassButtonOptions>[] = createButtonOptions([
-    // {
-    //     props: {
-    //         circle: true,
-    //         icon: Edit,
-    //         type: 'primary'
-    //     }
-    // },
-    // {
-    //     props: {
-    //         circle: true,
-    //         icon: Check,
-    //         loading: true
-    //     }
-    // },
-    // {
-    //     props: {
-    //         circle: true,
-    //         icon: Delete,
-    //         type: 'danger'
-    //     },
-    // },
+// const { total, rows } = TableData
+const buttonGrounpOptions: Partial<ClassButtonOptions>[] = [
+    {
+        props: {
+            circle: true,
+            icon: Edit,
+            type: 'primary'
+        }
+    },
+    {
+        props: {
+            circle: true,
+            icon: Check,
+            loading: true
+        }
+    },
+    {
+        props: {
+            circle: true,
+            icon: Delete,
+            type: 'danger'
+        },
+    },
     {
         id: 'search',
         innerHTML: '搜索全部数据',
@@ -44,7 +45,12 @@ const buttonGrounpOptions: Partial<ClassButtonOptions>[] = createButtonOptions([
             type: 'info',
         }
     }
-])
+]
+function getButtonGrounpOptions(initOptions: Partial<ClassButtonOptions>[]) {
+    const buttonGrounpOptions = createButtonOptions(_.cloneDeep(initOptions))
+    return buttonGrounpOptions
+}
+
 const tableColumn = computed(() => {
     const column: TableColumnConfig[] = [
         // {
@@ -126,5 +132,7 @@ async function copyToClipboard(row: any) {
 </script>
 
 <template>
-    <Table :table-column="tableColumn" :table-data="rows" />
+    <ButtonGrounp :options="getButtonGrounpOptions(buttonGrounpOptions)"></ButtonGrounp>
+    <ButtonGrounp :options="getButtonGrounpOptions(buttonGrounpOptions)"></ButtonGrounp>
+    <!-- <Table :table-column="tableColumn" :table-data="rows" /> -->
 </template>

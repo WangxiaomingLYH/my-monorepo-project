@@ -32,7 +32,6 @@ const resolvedProps = computed(() => {
         // 拿到传递的 props 的所有属性, 如果是方法, 就执行它, 并传递 row 和 paropName
         finalProps[key] = typeof value === 'function' ? value(props.row) : value
     }
-    // console.log(finalProps,"@finalProps")
     return finalProps
 })
 </script>

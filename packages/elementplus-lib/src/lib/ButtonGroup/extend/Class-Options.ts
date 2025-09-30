@@ -1,4 +1,5 @@
 import { type Component, reactive, markRaw } from "vue";
+import _ from 'lodash'
 
 type Props = {
     circle?: boolean,
