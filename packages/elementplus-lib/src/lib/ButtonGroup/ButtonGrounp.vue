@@ -15,7 +15,7 @@ function createButtonEventHandler(classButtonOption: Options) {
     return async () => {
         changePropsLoading(true)
         if (optionClick) {
-            await optionClick(classButtonOption)
+            await optionClick(classButtonOption, props.row)
         }
         changePropsLoading(false)
     }

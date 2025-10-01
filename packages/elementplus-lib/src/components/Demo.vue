@@ -26,9 +26,10 @@ function promiseFn(): Promise<string> {
     })
 }
 
-async function searchFn(ctx: Partial<ClassButtonOptions>) {
+async function searchFn(ctx: Partial<ClassButtonOptions>, rows: Object) {
     console.log("Edit")
-    console.log(ctx)
+    console.log(ctx, "@ctx")
+    console.log(rows, "@rows")
     ctx.setInnerHTML!('查找中...')
     await promiseFn()
     ctx.setInnerHTML!('查询成功')
@@ -64,7 +65,7 @@ const initButtonGrounpOptions: Partial<ClassButtonOptions>[] = [
             type: 'info'
         },
         events: {
-            click: (ctx) => searchFn(ctx)
+            click: (ctx, rows) => searchFn(ctx, rows)
         }
     }
 ]

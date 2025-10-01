@@ -10,7 +10,7 @@ type Props = {
     disabled?: boolean
 }
 type Events = {
-    click?: (ctx: Partial<ClassButtonOptions>) => void | Promise<void>
+    click?: (ctx: Partial<ClassButtonOptions>, rows: Object) => void | Promise<void>
 }
 
 export class ClassButtonOptions {
