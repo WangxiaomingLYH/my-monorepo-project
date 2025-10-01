@@ -5,8 +5,12 @@ import { ClassButtonOptions } from "./extend/Class-Options";
 // 接收传递的配置项
 type Options = Partial<ClassButtonOptions>
 const props = defineProps<{
-    options: Options[]
+    options: Options[],
+    row:Object
 }>()
+
+
+console.log(props.row,"@row")
 
 // 注入事件逻辑: 先 loading=true, 然后等待执行传递的方法, 然后 loading=true
 function createButtonEventHandler(classButtonOption: Options) {

@@ -6,6 +6,8 @@ type Props = {
     icon?: Component,
     loading?: boolean,
     type?: "" | "text" | "default" | "primary" | "success" | "warning" | "info" | "danger",
+    size?: 'large' | 'default' | 'small',
+    disabled?: boolean
 }
 type Events = {
     // click?: (ctx: ClassButtonOptions) => void | Promise<void>

@@ -37,11 +37,12 @@ const resolvedProps = computed(() => {
 </script>
 
 <template>
-    <component :is="child?.type" v-bind="resolvedProps">
+    <!-- 如果没有子组件, 就传递 row 给最终渲染的组件; 否则不传递, 因为此时已经有 resolvedProps 方法可以获取到需要的属性了, 再传递会有无谓的性能消耗 -->
+    <component :is="child?.type" v-bind="resolvedProps" :row="(child && child.child) ? null : row">
         <template v-if="child && child.child">
             <RecursiveComponent :child="child.child" :row="row" :prop-name="propName" />
         </template>
-        <template v-else v-on="child.click">
+        <template v-else>
             {{ child?.innerHTML || (row && row[propName!]) }}
         </template>
     </component>

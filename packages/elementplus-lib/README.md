@@ -87,6 +87,8 @@ async function searchFn(ctx: Partial<ClassButtonOptions>) {
 }
 ```
 
+
+
 ## 封装 Button 组件
 
 2. 难点在于如何更新属性值, 比如 loading.
