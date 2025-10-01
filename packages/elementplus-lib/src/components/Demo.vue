@@ -34,7 +34,7 @@ async function searchFn(ctx: Partial<ClassButtonOptions>, rows: Object) {
     await promiseFn()
     ctx.setInnerHTML!('查询成功')
 }
-// 按钮组配置项
+//  ElButtonGrounp 组件初始化配置项
 const initButtonGrounpOptions: Partial<ClassButtonOptions>[] = [
     {
         props: {
