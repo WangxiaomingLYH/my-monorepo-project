@@ -8,7 +8,8 @@ type Props = {
     type?: "" | "text" | "default" | "primary" | "success" | "warning" | "info" | "danger",
 }
 type Events = {
-    click?: (ctx: ClassButtonOptions) => void | Promise<void>
+    // click?: (ctx: ClassButtonOptions) => void | Promise<void>
+    click?: (ctx: Partial<ClassButtonOptions>) => void | Promise<void>
     // click?: Function
 }
 

@@ -16,8 +16,25 @@ import _ from "lodash";
 
 const { total, rows } = TableData
 
+//  把点击事件需要的操作封装成一个异步方法
+function promiseFn(): Promise<string> {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            console.log('3 秒过去了')
+            resolve('成功')
+        }, 3000)
+    })
+}
+
+async function searchFn(ctx: Partial<ClassButtonOptions>) {
+    console.log("Edit")
+    console.log(ctx)
+    ctx.setInnerHTML!('查找中...')
+    await promiseFn()
+    ctx.setInnerHTML!('查询成功')
+}
 // 按钮组配置项
-const buttonGrounpOptions: Partial<ClassButtonOptions>[] = [
+const initButtonGrounpOptions: Partial<ClassButtonOptions>[] = [
     {
         props: {
             circle: true,
@@ -44,7 +61,10 @@ const buttonGrounpOptions: Partial<ClassButtonOptions>[] = [
         innerHTML: '搜索全部数据',
         props: {
             icon: Search,
-            type: 'info',
+            type: 'info'
+        },
+        events: {
+            click: (ctx) => searchFn(ctx)
         }
     }
 ]
@@ -76,16 +96,7 @@ const tableColumn = computed(() => {
                     placement: "top",
                     // 通过传递方法的形式, 拿到  row, 然后处理 row
                     content: (row: any, name: string) => `应用ID是：${row.appId}, name 是: ${name}`,
-                },
-                child: {
-                    type: ElButton,
-                    props: {
-                        link: true,
-                        type: 'primary',
-                        options: buttonGrounpOptions
-                    },
-
-                },
+                }
             }
         },
         {
@@ -106,7 +117,7 @@ const tableColumn = computed(() => {
             child: {
                 type: ButtonGrounp,
                 props: {
-                    options: () => getButtonGrounpOptions(buttonGrounpOptions)
+                    options: () => getButtonGrounpOptions(initButtonGrounpOptions)
                 }
             }
         },
