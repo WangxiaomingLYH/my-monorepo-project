@@ -6,13 +6,10 @@ import { ClassButtonOptions } from "./extend/Class-Options";
 type Options = Partial<ClassButtonOptions>
 const props = defineProps<{
     options: Options[],
-    row:Object
+    row: Object
 }>()
 
-
-console.log(props.row,"@row")
-
-// 注入事件逻辑: 先 loading=true, 然后等待执行传递的方法, 然后 loading=true
+// 注入事件逻辑: 先 loading=true, 然后等待执行传递的方法, 然后 loading=false
 function createButtonEventHandler(classButtonOption: Options) {
     const { click: optionClick } = classButtonOption.events || {}
     return async () => {
@@ -44,5 +41,3 @@ props.options.forEach((classButtonOption) => {
         </component>
     </template>
 </template>
-
-<style scoped lang="scss"></style>

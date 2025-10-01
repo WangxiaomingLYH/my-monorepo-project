@@ -13,99 +13,86 @@
   - 创建一个 class 和一个 createClass 实例对象的方法, 接收消费端传递的配置项数据, 通过 reactive 转为响应式对象之后创建 class 实例对象, 返回成一个由 class 实例对象组成的新数组, 用于 ElButtonGrounp 组件渲染
   - 这里会有两个隐蔽的问题: 返回的 class 实例化对象如果直接用于 TableColumn 渲染, 就会导致所有的组件共用一个 loading 属性; 所以需要通过函数的方式, 传入一个 initButtonGrounpOptions, 然后经过深度克隆后再调用 createClass 方法
   - 这里注意: 已经传递了 events 事件给 buttonGrounp 组件, 在该组件中不要直接覆盖
-  ```
-    import _ from "lodash";
-    const initButtonGrounpOptions: Partial<ClassButtonOptions>[] = [
-        {
-            id: 'search',
-            innerHTML: '搜索全部数据',
-            props: {
-                icon: Search,
-                type: 'info',
-            },
-            events: {
-                click: () => console.log('11111')
-            }
-        }
-    ]
-    function getButtonGrounpOptions(initOptions: Partial<ClassButtonOptions>[]) {
-        const buttonGrounpOptions = createButtonOptions(_.cloneDeep(initOptions))
-        return buttonGrounpOptions
-    }
-  ```
+  
+    ```
+      import _ from "lodash";
+      const initButtonGrounpOptions: Partial<ClassButtonOptions>[] = [
+          {
+              id: 'search',
+              innerHTML: '搜索全部数据',
+              props: {
+                  icon: Search,
+                  type: 'info',
+              },
+              events: {
+                  click: () => console.log('11111')
+              }
+          }
+      ]
+      function getButtonGrounpOptions(initOptions: Partial<ClassButtonOptions>[]) {
+          const buttonGrounpOptions = createButtonOptions(_.cloneDeep(initOptions))
+          return buttonGrounpOptions
+      }
+    ```
+  
+    
 
 2. 解决父组件传递事件给子组件, 子组件按照顺序执行, 并传递数据给父组件的问题
 
 - 由于 ElButtonGrounp 组件是通过 v-on 动态绑定事件的, 所以需要传递的是对象, 也就是 `{ click:()=>{...} }` 格式
 - 所以在注入事件时, 可以考虑将 loading 属性的变化封装在一起, 然后等待执行父组件传递来的事件, 在调用该事件时, 把配置对象传递过去. 这样就方便父组件精准的对该组件进行额外的配置
 
-```ts
-// 注入事件逻辑: 先 loading=true, 然后等待执行传递的方法, 然后 loading=true
-function createButtonEventHandler(classButtonOption: Options) {
-  const { click: optionClick } = classButtonOption.events || {};
-  return async () => {
-    changePropsLoading(true);
-    if (optionClick) {
-      // 执行父组件传递的数据, 并传递配置项数据
-      await optionClick(classButtonOption);
+  ```
+  // 注入事件逻辑: 先 loading=true, 然后等待执行传递的方法, 然后 loading=true
+  function createButtonEventHandler(classButtonOption: Options) {
+    const { click: optionClick } = classButtonOption.events || {};
+    return async () => {
+      changePropsLoading(true);
+      if (optionClick) {
+        // 执行父组件传递的数据, 并传递配置项数据
+        await optionClick(classButtonOption);
+      }
+      changePropsLoading(false);
+    };
+    // 改变 loading 属性方法
+    function changePropsLoading(value: boolean = false) {
+      classButtonOption.setProps!("loading", value);
     }
-    changePropsLoading(false);
-  };
-  // 改变 loading 属性方法
-  function changePropsLoading(value: boolean = false) {
-    classButtonOption.setProps!("loading", value);
   }
-}
+  
+  // 批量的注入事件, 这里只注入了 click 事件
+  props.options.forEach((classButtonOption) => {
+    classButtonOption.events = {
+      click: createButtonEventHandler(classButtonOption),
+    };
+  });
+  
+  
+  // 父组件的配置项
+  {
+      id: 'search',
+      innerHTML: '搜索全部数据',
+      props: {
+          icon: Search,
+          type: 'info',
+      },
+      events: {
+          click: (ctx) => searchFn(ctx)
+      }
+  }
+  
+  async function searchFn(ctx: Partial<ClassButtonOptions>) {
+      console.log("Edit")
+      console.log(ctx)
+      ctx.setInnerHTML!('查找中...')
+      await promiseFn()
+      ctx.setInnerHTML!('查询成功')
+  }
+  ```
 
-// 批量的注入事件, 这里只注入了 click 事件
-props.options.forEach((classButtonOption) => {
-  classButtonOption.events = {
-    click: createButtonEventHandler(classButtonOption),
-  };
-});
+  
 
-
-父组件的配置项
-{
-    id: 'search',
-    innerHTML: '搜索全部数据',
-    props: {
-        icon: Search,
-        type: 'info',
-    },
-    events: {
-        click: (ctx) => searchFn(ctx)
-    }
-}
-
-async function searchFn(ctx: Partial<ClassButtonOptions>) {
-    console.log("Edit")
-    console.log(ctx)
-    ctx.setInnerHTML!('查找中...')
-    await promiseFn()
-    ctx.setInnerHTML!('查询成功')
-}
-```
-
-
-
-## 封装 Button 组件
-
-2. 难点在于如何更新属性值, 比如 loading.
-   - button 并不传递数据, 而是要动态调整自身的属性. 无论是通过写方法修改配置项本身还是传递事件给组件, 都不够优雅
-     - 传递事件给组件, 触发组件中预设的更新函数, 然后对传递的 props 属性进行覆盖
-   - 借助 class 类, 可以在类里定义修改属性的方法, 然后统一注入事件即可
-     - 优雅且高效
-     - 很简单的就完成了批量绑定事件的操作, 还能精准的给不同的 button 添加不同的事件
-
-**实现方式:**
-
-1. 通过 class 生成配置项
-   - 写一个 class, 内置了默认的各种属性, 通过 constructor 构造函数进行实例化
-   - class 中包含修改某些属性的方法, 比如 setProps 和 setInnerHTML
-   - 封装有一个函数, 接受配置项列表, 在函数中返回被 class 实例化后组成的新数组
-     - 被 class 实例化时, 需要通过 reactive 代理成响应式数据, 否则即使修改后也不会生效
-     - 如果配置项中传递了组件比如 icon, 记得在 constructor 实例化时, 将 icon 通过 markRaw 标记为不可转化代理, 否则浏览器会警告
+3. 修改数据的按钮可能需要使用到 row 数据, 这里是通过 RecursiveComponent 组件把 row 数据传递给最终渲染的组件, 然后在 buttonGrounp 组件中声明 row 为 props
 
 ## 封装的 Table 组件
 

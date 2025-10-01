@@ -7,8 +7,6 @@ import { type Props } from "./extend/index"
 const attr = useAttrs()
 const props = defineProps<Props>()
 
-// console.log(attr, "@attr")
-// console.log(props, "@props")
 </script>
 
 <template>

@@ -1,23 +1,11 @@
 <script setup lang="ts">
-import { computed, type Component } from 'vue'
+import { computed } from 'vue'
 
-/**
- * 递归组件:
- *  1. 将配置项传递的事件绑定到父级上 
- */
-
-
-//  这一块有问题, 类型声明不对
 const props = defineProps({
     child: Object,
     row: Object,
     propName: String
 })
-
-// console.log(props.child, "@child")
-// console.log(props.row, "@row")
-// console.log(props.propName, "@propName")
-
 
 /**
  * 自动解析 props 中的函数值（如 content: (row) => row.appId）
