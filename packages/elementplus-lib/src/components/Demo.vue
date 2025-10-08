@@ -16,7 +16,7 @@ import _ from "lodash";
 
 const { total, rows } = TableData
 
-//  把点击事件需要的操作封装成一个异步方法
+// 模拟一个异步函数
 function promiseFn(): Promise<string> {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -26,10 +26,8 @@ function promiseFn(): Promise<string> {
     })
 }
 
+//  把点击事件需要的操作封装成一个异步方法
 async function searchFn(ctx: Partial<ClassButtonOptions>, rows: Object) {
-    console.log("Edit")
-    console.log(ctx, "@ctx")
-    console.log(rows, "@rows")
     ctx.setInnerHTML!('查找中...')
     await promiseFn()
     ctx.setInnerHTML!('查询成功')
@@ -113,8 +111,8 @@ const tableColumn = computed(() => {
             prop: 'appRatio'
         },
         {
-            label: 'Exchange Rate',
-            prop: 'appRatio',
+            label: 'Action',
+            prop: 'action',
             child: {
                 type: ButtonGrounp,
                 props: {

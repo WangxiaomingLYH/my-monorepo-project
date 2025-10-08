@@ -1,98 +1,142 @@
 ## 封装一个 ElButtonGrounp 组件
 
-**思路:**
+### **思路:**
 
-1. 配置项和 v-bind 的方式, 传递 props, 包含 icon type circle loading 等需要的属性; 如果有 innerHTML 属性, 就通过 #default 插槽渲染; 通过 v-on(缩写为@) 绑定事件
+通过配置项和 v-bind 的方式, 传递 props, 包含 icon type circle loading 等需要的属性
 
-**实践问题:**
+如果有 innerHTML 属性, 就通过 #default 插槽渲染; 通过 v-on(缩写为@) 绑定事件
 
-1. 解决动态修改属性问题:
+### **实践问题:**
 
-- button 组件需要动态修改 loading 属性, 可以通过 class 内置一个修改属性的方法, 然后给组件绑定该方法
+#### 解决动态修改 loading 属性问题:
+
+1. button 组件需要动态修改 loading 属性, 可以通过 class 内置一个修改属性的方法, 然后给组件绑定该方法
+
 - 步骤:
-  - 创建一个 class 和一个 createClass 实例对象的方法, 接收消费端传递的配置项数据, 通过 reactive 转为响应式对象之后创建 class 实例对象, 返回成一个由 class 实例对象组成的新数组, 用于 ElButtonGrounp 组件渲染
-  - 这里会有两个隐蔽的问题: 返回的 class 实例化对象如果直接用于 TableColumn 渲染, 就会导致所有的组件共用一个 loading 属性; 所以需要通过函数的方式, 传入一个 initButtonGrounpOptions, 然后经过深度克隆后再调用 createClass 方法
-  - 这里注意: 已经传递了 events 事件给 buttonGrounp 组件, 在该组件中不要直接覆盖
-  
-    ```
-      import _ from "lodash";
-      const initButtonGrounpOptions: Partial<ClassButtonOptions>[] = [
-          {
-              id: 'search',
-              innerHTML: '搜索全部数据',
-              props: {
-                  icon: Search,
-                  type: 'info',
-              },
-              events: {
-                  click: () => console.log('11111')
-              }
-          }
-      ]
-      function getButtonGrounpOptions(initOptions: Partial<ClassButtonOptions>[]) {
-          const buttonGrounpOptions = createButtonOptions(_.cloneDeep(initOptions))
-          return buttonGrounpOptions
-      }
-    ```
-  
-    
+  1. 创建一个 class 和一个 createClass 实例对象的方法, 接收传递的配置项数据, 通过 reactive 转为响应式对象. 然后进行 class 对象实例化, 返回成一个由 class 实例对象组成的新数组, 用于 ElButtonGrounp 组件渲染. 此时单个的 ElButtonGrounp 组件就渲染完成了.
 
-2. 解决父组件传递事件给子组件, 子组件按照顺序执行, 并传递数据给父组件的问题
+  2. 表单中往往会渲染多个, 所以还需要解决以下问题
 
-- 由于 ElButtonGrounp 组件是通过 v-on 动态绑定事件的, 所以需要传递的是对象, 也就是 `{ click:()=>{...} }` 格式
-- 所以在注入事件时, 可以考虑将 loading 属性的变化封装在一起, 然后等待执行父组件传递来的事件, 在调用该事件时, 把配置对象传递过去. 这样就方便父组件精准的对该组件进行额外的配置
+     1. class 的构造函数 createClass 方法, 不能接收同一个配置项, 否则 vue 会将它渲染成同一个组件, 导致 loading 属性被公用
 
-  ```
-  // 注入事件逻辑: 先 loading=true, 然后等待执行传递的方法, 然后 loading=true
-  function createButtonEventHandler(classButtonOption: Options) {
-    const { click: optionClick } = classButtonOption.events || {};
-    return async () => {
-      changePropsLoading(true);
-      if (optionClick) {
-        // 执行父组件传递的数据, 并传递配置项数据
-        await optionClick(classButtonOption);
-      }
-      changePropsLoading(false);
-    };
-    // 改变 loading 属性方法
-    function changePropsLoading(value: boolean = false) {
-      classButtonOption.setProps!("loading", value);
-    }
-  }
-  
-  // 批量的注入事件, 这里只注入了 click 事件
-  props.options.forEach((classButtonOption) => {
-    classButtonOption.events = {
-      click: createButtonEventHandler(classButtonOption),
-    };
-  });
-  
-  
-  // 父组件的配置项
-  {
-      id: 'search',
-      innerHTML: '搜索全部数据',
-      props: {
-          icon: Search,
-          type: 'info',
-      },
-      events: {
-          click: (ctx) => searchFn(ctx)
-      }
-  }
-  
-  async function searchFn(ctx: Partial<ClassButtonOptions>) {
-      console.log("Edit")
-      console.log(ctx)
-      ctx.setInnerHTML!('查找中...')
-      await promiseFn()
-      ctx.setInnerHTML!('查询成功')
-  }
-  ```
+        1. 解决方法: 创建 initButtonGrounpOptions 对象, 通过函数的方式深度克隆(_.cloneDeep)后, 传递给构造函数 createClass
 
-  
+           ```tsx
+             function getButtonGrounpOptions(initOptions: Partial<ClassButtonOptions>[]) {
+                 const buttonGrounpOptions = createButtonOptions(_.cloneDeep(initOptions))
+                 return buttonGrounpOptions
+             }
+           ```
 
-3. 修改数据的按钮可能需要使用到 row 数据, 这里是通过 RecursiveComponent 组件把 row 数据传递给最终渲染的组件, 然后在 buttonGrounp 组件中声明 row 为 props
+
+2. 怎么绑定事件问题: 将需要自定义的事件通过 async 包装成一个异步函数传递给 ElButtonGrounp 组件. 然后 ElButtonGrounp 等待异步组件的执行即可
+
+   1. 由于 ElButtonGrounp 组件是通过 v-on 动态绑定事件的, 所以需要传递的是对象, 也就是 `{ click:()=>{...} }` 格式
+
+      - 在注入事件时, 可以考虑将 loading 属性的变化封装在一起, 然后等待执行父组件传递来的事件, 在调用该事件时, 把配置对象传递过去. 这样就方便父组件精准的对该组件进行额外的配置
+
+      - 注意: 我在 ElButtonGrounp 组件中, 执行父组件传递的事件时, 把当前组件的 class 实例化对象和接收的 row 都当作参数传递了. 所以父组件可以直接使用这些数据(类似与 vue 的父子组件通信---父组件传递方法给子组件, 子组件调用并传递数据, 这样父组件就可以访问子组件的数据了)
+
+        ```tsx
+        // 注入事件逻辑: 先 loading=true, 然后等待执行传递的方法, 然后 loading=false
+        function createButtonEventHandler(classButtonOption: Options) {
+            const { click: optionClick } = classButtonOption.events || {}
+            return async () => {
+                changePropsLoading(true)
+                if (optionClick) {
+                    await optionClick(classButtonOption, props.row)
+                }
+                changePropsLoading(false)
+            }
+            // 改变 loading 属性方法
+            function changePropsLoading(value: boolean = false) {
+                classButtonOption.setProps!('loading', value)
+            }
+        }
+        
+        props.options.forEach((classButtonOption) => {
+            classButtonOption.events = {
+                click: createButtonEventHandler(classButtonOption)
+            }
+        })
+        
+        
+        // 父组件的配置项
+        {
+            id: 'search',
+            innerHTML: '搜索全部数据',
+            props: {
+                icon: Search,
+                type: 'info'
+            },
+            events: {
+                click: (ctx, rows) => searchFn(ctx, rows)
+            }
+        }
+        
+        // 注意: 这里使用 async 包装成的异步组件
+        async function searchFn(ctx: Partial<ClassButtonOptions>) {
+            console.log("Edit")
+            console.log(ctx)
+            ctx.setInnerHTML!('查找中...')
+            await 某一个异步函数()
+            ctx.setInnerHTML!('查询成功')
+        }
+        ```
+        
+
+### ElButtonGrounp 实例化流程
+
+1. 创建满足 `Partial<ClassButtonOptions>[]`  类型声明的配置项数组, 并通过函数的方式确保配置项唯一化
+
+   1. 可以传递自定义事件
+
+   ```tsx
+   //  1. 创建 ElButtonGrounp 组件初始化配置项
+   const initButtonGrounpOptions: Partial<ClassButtonOptions>[] = [
+       {
+           id: 'search',
+           innerHTML: '搜索全部数据',
+           props: {
+               icon: Search,
+               type: 'info'
+           },
+           // 传递自定义事件
+           events: {
+               click: (ctx, rows) => searchFn(ctx, rows)
+           }
+       }
+   ]
+   
+   // 2. 创建深度克隆函数, 确保配置项唯一
+   function getButtonGrounpOptions(initOptions: Partial<ClassButtonOptions>[]) {
+       const buttonGrounpOptions = createButtonOptions(_.cloneDeep(initOptions))
+       return buttonGrounpOptions
+   }
+   ```
+
+   
+
+2. 将该配置项通过 defineProps 的方式传递给 ElButtonGrounp 组件; 执行流程是:
+
+   1. 先传递给递归调用渲染组件 RecursiveComponent, 这一步需要传递所有属性和 row 给 ElButtonGrounp 组件
+   2. 然后渲染 ElButtonGrounp 组件, 这里接收到了所有属性和 row
+
+   ```tsx
+   // 1. 配置项传递给 RecursiveComponent 组件, 会透传给 ElButtonGrounp 组件
+   {
+       label: 'Action',
+       prop: 'action',
+       child: {
+           type: ButtonGrounp,
+           props: {
+               options: () => getButtonGrounpOptions(initButtonGrounpOptions)
+           }
+       }
+   }
+   ```
+
+   
 
 ## 封装的 Table 组件
 
