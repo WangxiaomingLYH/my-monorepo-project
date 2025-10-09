@@ -1,4 +1,5 @@
-import type { Component } from "vue"
+import type { Component, ComponentInstance } from "vue"
+import { ElTable, ElTableColumn } from "element-plus";
 
 export type Child = {
     type: string | Component,
@@ -8,13 +9,13 @@ export type Child = {
     click?: Function,
     child?: Child,
 }
-export interface TableColumnConfig {
-    label: string
-    prop: string
-    width?: string | number
+export type ElTableColumnConfig = Partial<ComponentInstance<typeof ElTableColumn>>
+export interface TableColumnConfig extends ElTableColumnConfig {
     child?: Child
 }
+export type TableAttribute = Partial<ComponentInstance<typeof ElTable>>
 export interface Props {
     tableColumn: TableColumnConfig[],
-    tableData: any
+    tableData: any[],
+    tableAttribute?: TableAttribute
 }

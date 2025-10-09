@@ -193,7 +193,7 @@
                   }
                   finalProps[key] = fn(fieldValues)
               }
-              // 需要把读取 row 和初始化配置项的方法分开
+              // 需要把读取 row 和初始化配置项的方法分开, 降低耦合度
               else if (typeof value === 'function') {
                   finalProps[key] = value()
               }
@@ -238,3 +238,45 @@
 
       
 
+
+### 注意事项
+
+1. 要牢记 vue3 的策略: vue3 会把所有没有被 defineProps 显式声明的属性收集到 $attrs
+
+   1. 哪怕使用 v-on(@) 关键字注册为事件, 也会被收集到 $attrs, 不过会自动转为适合 createVNode 读取的配置项格式
+
+   ```tsx
+   // 1. 模板中传递事件
+   <Table :table-column="tableColumn" :table-data="rows" :table-attribute="tableAttribute" @selection-change="handleSelectionChange" />
+   
+   // 2. 组件中读取
+   import { useAttrs } from 'vue'
+   const attrs = useAttrs()
+   console.log('Table 组件接收到的 $attrs:', attrs)  ===> onSelectionChange:(val) => {…}
+   ```
+
+2.  所有事件绑定方法最终都会收敛为 VNode 的 props 中的 onXxx 事件格式
+
+   1. 因为 vue 模板语法只是语法糖, vue 编译器会把所有事件相关指令统一转译成标准的 js 调用形式, 最终由 createVNode 创建虚拟节点时注册事件监听器, 所以下面的几个写法, 经过 vue 编译后都一样
+
+      ```tsx
+      // 1. 使用 @ 语法糖
+      <MyButton @click="handleClick" />
+      
+      // 2. 使用 v-on
+      <MyButton v-on:click="handleClick" />
+      
+      // 3. 使用 v-on 绑定多个事件; 这里只用一个示例
+      <MyButton v-on="{ click: handleClick, ... }" />
+      
+      // 4. 使用 v-bind 明确绑定 onClick; 这里已经写出来最终格式, vue 无需转译就可以传给 createVNode
+      <MyButton v-bind="{ onClick: handleClick }" />
+      
+      // 最终都会被转译为:
+      createVNode(MyButton, {
+        onClick: handleClick,
+        onMouseenter: onEnter
+      })
+      ```
+
+      

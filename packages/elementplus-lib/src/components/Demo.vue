@@ -14,6 +14,7 @@ import ButtonGrounp from "../lib/ButtonGroup/ButtonGrounp.vue"
 import { ClassButtonOptions, createButtonOptions } from "../lib/ButtonGroup/extend/Class-Options"
 import _ from "lodash";
 
+
 const { total, rows } = TableData
 
 // 模拟一个异步函数
@@ -75,9 +76,16 @@ function getButtonGrounpOptions(initOptions: Partial<ClassButtonOptions>[]) {
 // table 列配置项
 const tableColumn = computed(() => {
     const column: TableColumnConfig[] = [
+        // 配置多选按钮
+        {
+            type: "selection",
+            width: '55',
+            fixed: true
+        },
         {
             label: 'App Name',
             prop: 'appName',
+            sortable: true,
             child: {
                 type: 'div',
             }
@@ -112,7 +120,6 @@ const tableColumn = computed(() => {
             child: {
                 type: ButtonGrounp,
                 props: {
-                    // 方案一: 哪个组件传递的事件, 哪个组件执行
                     options: () => getButtonGrounpOptions(initButtonGrounpOptions)
                 }
             }
@@ -120,8 +127,24 @@ const tableColumn = computed(() => {
     ]
     return column
 })
+
+// 配置 Table 本级的配置项
+const tableAttribute = {
+    stripe: true,
+    border: true,
+    onSelectionChange: (val: any) => handleSelectionChange(val)
+}
+
+const multipleSelection = ref<any[]>([])
+const handleSelectionChange = (val: any[]) => {
+    multipleSelection.value = val
+}
 </script>
 
 <template>
-    <Table :table-column="tableColumn" :table-data="rows" />
+    <h1 style="width: 100%">Table 测试</h1>
+    <el-button @click="() => { console.log(multipleSelection, '@multipleSelection') }">
+        log选中数据
+    </el-button>
+    <Table :table-column="tableColumn" :table-data="rows" :table-attribute="tableAttribute" />
 </template>
