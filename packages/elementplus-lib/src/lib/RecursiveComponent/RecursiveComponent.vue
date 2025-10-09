@@ -8,7 +8,14 @@ const props = defineProps({
 })
 
 /**
- * 自动解析 props 中的函数值（如 content: (row) => row.appId）
+ * 属性解析逻辑：
+ * 1. 数组格式 [字段数组, 转换函数] - 用于需要从row提取特定字段并转换的场景
+ *    示例: [['id', 'name'], ({id, name}) => `ID: ${id}, Name: ${name}`]
+ *    
+ * 2. 函数格式 () => any - 用于生成配置项等不需要row数据的场景
+ *    示例: () => getButtonOptions(initOptions)
+ *    
+ * 3. 其他值 - 直接作为属性值传递
  */
 const resolvedProps = computed(() => {
     // 拿到传递的 props, 或置空
@@ -17,8 +24,24 @@ const resolvedProps = computed(() => {
 
     for (const key in rawProps) {
         const value = rawProps[key]
-        // 拿到传递的 props 的所有属性, 如果是方法, 就执行它, 并传递 row 和 paropName
-        finalProps[key] = typeof value === 'function' ? value(props.row) : value
+
+        // 如果传递的是数组并第 2 个是方法, 则传递所需要的值
+        if (Array.isArray(value) && typeof value[1] === 'function') {
+            const [fieldPaths, fn] = value
+            const fieldValues: Record<string, any> = {}
+            for (const element of fieldPaths) {
+                fieldValues[element] = props.row?.[element]
+            }
+            finalProps[key] = fn(fieldValues)
+        }
+        // 需要把读取 row 和初始化配置项的方法分开
+        else if (typeof value === 'function') {
+            finalProps[key] = value()
+        }
+        // 否则当作普通属性
+        else {
+            finalProps[key] = value
+        }
     }
     return finalProps
 })

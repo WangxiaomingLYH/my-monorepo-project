@@ -79,9 +79,6 @@ const tableColumn = computed(() => {
             label: 'App Name',
             prop: 'appName',
             child: {
-                // 封装的子组件, 这里使用 el-button 示例
-                // 传递 props 事件等, 插槽就放到封装的子组件中, 以防套娃
-                // 事件是不是触发该组件的比较好? 手动的传递过去还需要模板上手动的注册, 如果要设定 click change 事件呢    默认只接受点击事件, 如果需要触发其他事件, 则自定义组件
                 type: 'div',
             }
         },
@@ -93,14 +90,13 @@ const tableColumn = computed(() => {
                 props: {
                     effect: "dark",
                     placement: "top",
-                    // 通过传递方法的形式, 拿到  row, 然后处理 row
-                    content: (row: any, name: string) => `应用ID是：${row.appId}, name 是: ${name}`,
+                    // 传递数组, 只能拿到所需要的属性, 此时 supplierName 是 undefined
+                    content: [['appId', 'appName'], ({ appId, appName, supplierName }: Record<string, any>) => `应用ID是：${appId}, name 是: ${appName}, supplierName是:${supplierName}`],
+                },
+                child: {
+                    type: ElButton,
                 }
             }
-        },
-        {
-            label: 'Supplier',
-            prop: 'supplierName'
         },
         {
             label: 'Currency',
@@ -116,10 +112,11 @@ const tableColumn = computed(() => {
             child: {
                 type: ButtonGrounp,
                 props: {
+                    // 方案一: 哪个组件传递的事件, 哪个组件执行
                     options: () => getButtonGrounpOptions(initButtonGrounpOptions)
                 }
             }
-        },
+        }
     ]
     return column
 })

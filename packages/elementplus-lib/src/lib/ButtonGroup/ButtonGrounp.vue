@@ -24,7 +24,7 @@ function createButtonEventHandler(classButtonOption: Options) {
         classButtonOption.setProps!('loading', value)
     }
 }
-    
+
 props.options.forEach((classButtonOption) => {
     classButtonOption.events = {
         click: createButtonEventHandler(classButtonOption)

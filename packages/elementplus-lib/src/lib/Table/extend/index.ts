@@ -1,5 +1,4 @@
-import type { Component } from "vue"    
-import { type Table } from "element-plus";
+import type { Component } from "vue"
 
 export type Child = {
     type: string | Component,
