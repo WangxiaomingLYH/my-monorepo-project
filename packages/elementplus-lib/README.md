@@ -1,3 +1,20 @@
+## ✅ 除了表格和表单，其实这几类也适合封装（按功能划分）
+
+| 类别             | 说明                            | 示例封装价值                       |
+| ---------------- | ------------------------------- | ---------------------------------- |
+| ✅ 权限组件       | 控制是否渲染 DOM                | `<HasPermission code="user:edit">` |
+| ✅ 弹窗模版       | 带确认、自动重置、loading       | `<ConfirmModal />`                 |
+| ✅ 表单布局组件   | 快速组合多个字段、自动响应      | `<FormRow :items="fields" />`      |
+| ✅ 页面结构框架   | 一致布局、标题、面包屑          | `<PageContainer>`                  |
+| ✅ 请求 Hook 封装 | 数据加载、loading、缓存等       | `useTable`, `useFormSubmit`        |
+| ✅ 通知系统       | 全局 loading/toast/confirm 封装 | `message.success()`, `useNotify()` |
+
+
+
+# 封装 Table 组件
+
+1. 封装的 Table 组件使用  `component :is=''` 的方式, 这种方式不考虑插槽
+
 ## 封装一个 ElButtonGrounp 组件
 
 ### **思路:**
@@ -280,3 +297,8 @@
       ```
 
       
+
+# 封装 Dialog 组件
+
+1. 使用  `component is='h(ElButton,{...$attrs,ref:changRef},$slots)'`  的方式, 此时就需要考虑插槽了
+2. 因为 Dialog 组件包裹的内容可能会更多

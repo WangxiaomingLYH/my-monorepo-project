@@ -17,6 +17,15 @@ import _ from "lodash";
 
 const { total, rows } = TableData
 
+// 携带 row 打开 Dialog 的操作
+const dialogVisible = ref(false)
+function viewData(rows: Object = {}) {
+    dialogVisible.value = true
+    const { } = rows
+
+}
+
+
 // 模拟一个异步函数
 function promiseFn(): Promise<string> {
     return new Promise((resolve) => {
@@ -40,6 +49,11 @@ const initButtonGrounpOptions: Partial<ClassButtonOptions>[] = [
             circle: true,
             icon: Edit,
             type: 'primary'
+        },
+        events: {
+            click(ctx, rows) {
+                viewData(rows)
+            },
         }
     },
     {
@@ -147,4 +161,24 @@ const handleSelectionChange = (val: any[]) => {
         log选中数据
     </el-button>
     <Table :table-column="tableColumn" :table-data="rows" :table-attribute="tableAttribute" />
+
+    <el-dialog v-model="dialogVisible" title="查看数据">
+        <h1>查看数据</h1>
+
+        <template #header>
+            替代 title 属性
+        </template>
+
+        
+
+        <!-- 这里一定要用到插槽 -->
+        <template #footer>
+            <el-button @click="dialogVisible = false">
+                Cancel
+            </el-button>
+            <el-button type="primary" @click="dialogVisible = false">
+                Confirm
+            </el-button>
+        </template>
+    </el-dialog>
 </template>

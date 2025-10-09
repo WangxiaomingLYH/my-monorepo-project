@@ -1,16 +1,8 @@
 <script lang="ts" setup>
-import { ElTableColumn } from "element-plus";
 import RecursiveComponent from "../RecursiveComponent/RecursiveComponent.vue";
 import { type Props } from "./extend/index"
 
-const ElTableColumnAttrs = ElTableColumn.props
-
 defineProps<Props>()
-
-import { useAttrs } from 'vue'
-
-const attrs = useAttrs()
-console.log('Table 组件接收到的 $attrs:', attrs)
 </script>
 
 <template>
