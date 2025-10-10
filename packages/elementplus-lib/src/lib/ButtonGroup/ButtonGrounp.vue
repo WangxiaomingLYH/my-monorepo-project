@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ElButton } from 'element-plus';
-import { ClassButtonOptions } from "./extend/Class-Options";
+import { ClassButtonOptions } from "./Class-Options";
 
 // 接收传递的配置项
 type Options = Partial<ClassButtonOptions>

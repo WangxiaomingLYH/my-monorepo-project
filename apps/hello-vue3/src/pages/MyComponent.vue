@@ -9,7 +9,7 @@ const { total, rows } = dataList
 <template>
     <div>
         <h1>wxm 公共组件库</h1>
-        <Table ></Table>
+        <Table></Table>
 
         <h1>自己封装的组件</h1>
         <Demo></Demo>

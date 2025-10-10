@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import RecursiveComponent from "../RecursiveComponent/RecursiveComponent.vue";
-import { type Props } from "./extend/index"
+import { type Props } from "./type"
 
 defineProps<Props>()
 </script>
