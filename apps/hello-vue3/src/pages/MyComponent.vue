@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Demo from "@/components/MyComponents/Demo.vue";
-import { Table } from "wxm-elementplus-lib";
 import dataList from './extend/mock.json'
+import Demo from "@/components/MyComponents/Demo.vue";
+import TableDemo from "@/components/MyComponents/TableDemo.vue";
 
 const { total, rows } = dataList
 </script>
@@ -9,7 +9,7 @@ const { total, rows } = dataList
 <template>
     <div>
         <h1>wxm 公共组件库</h1>
-        <Table></Table>
+        <TableDemo></TableDemo>
 
         <h1>自己封装的组件</h1>
         <Demo></Demo>
