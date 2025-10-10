@@ -298,7 +298,7 @@
 
       
 
-# 封装 Dialog 组件
+# 封装 Form 组件
 
 1. 使用  `component is='h(ElButton,{...$attrs,ref:changRef},$slots)'`  的方式, 此时就需要考虑插槽了
 2. 因为 Dialog 组件包裹的内容可能会更多

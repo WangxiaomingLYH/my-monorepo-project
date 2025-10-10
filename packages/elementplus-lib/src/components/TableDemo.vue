@@ -9,7 +9,7 @@ import {
 } from '@element-plus/icons-vue'
 import TableData from "./extend/mock.json";
 import Table from "../lib/Table/Table.vue";
-import { type TableColumnConfig } from "../lib/Table/extend/index";
+import { type TableColumnConfig } from "../lib/Table/extend";
 import ButtonGrounp from "../lib/ButtonGroup/ButtonGrounp.vue"
 import { ClassButtonOptions, createButtonOptions } from "../lib/ButtonGroup/extend/Class-Options"
 import _ from "lodash";

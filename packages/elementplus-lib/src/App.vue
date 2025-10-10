@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import Demo from "./components/Demo.vue";
+import TableDemo from "./components/TableDemo.vue";
+import FromDemo from "./components/FromDemo.vue";
 </script>
 
 <template>
-  <Demo />
+  <div>
+    <el-divider>Table 组件的二次封装</el-divider>
+    <TableDemo />
+    <el-divider>Form 组件的二次封装</el-divider>
+    <FromDemo></FromDemo>
+  </div>
 </template>
 
 <style scoped lang="scss"></style>

@@ -1,4 +1,4 @@
-import { type Child } from "../Table/extend/index";
+import { type Child } from "../Table/extend";
 
 type Row = {
     [key: string]: any

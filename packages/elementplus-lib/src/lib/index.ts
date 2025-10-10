@@ -6,9 +6,6 @@ export {
     Table
 }
 
-// 类型导出
-// export * from './types';
-
 const components = [Table]
 
 // 默认导出全局组件注册方法. 当用户使用 app.use('自定义组件库') 时, 会自动调用 install 方法, 将所有组件注册为全局组件
