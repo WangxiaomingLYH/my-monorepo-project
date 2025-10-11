@@ -1,9 +1,11 @@
 import type { App } from "vue";
 import Table from "./Table/Table.vue";
+import type { TableColumnConfig } from './Table/type'
 
 // 命名导出, 允许用户按需导入单个文件: `import { Table } from '自定义组件库'`
 export {
-    Table
+    Table,
+    type TableColumnConfig
 }
 
 const components = [Table]

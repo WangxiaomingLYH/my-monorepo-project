@@ -156,7 +156,6 @@ const handleSelectionChange = (val: any[]) => {
 </script>
 
 <template>
-    <h1 style="width: 100%">Table 测试</h1>
     <el-button @click="() => { console.log(multipleSelection, '@multipleSelection') }">
         log选中数据
     </el-button>
