@@ -22,7 +22,8 @@ function onHandleCurrentChange() {
 </script>
 
 <template>
-    <Pagination :pagination="onHandleCurrentChange" :options="options"></Pagination>
+    <Pagination :pagination="onHandleCurrentChange" :options="options" v-model:page-size="pageSize"
+        v-model:current-page="currentPage"></Pagination>
     <!-- <Pagination :pagination="handleSizeChange" :options="options" v-model:page-size="pageSize" v-model:current-page="currentPage"
         @size-change="handleSizeChange" @current-change="handleCurrentChange" /> -->
 </template>

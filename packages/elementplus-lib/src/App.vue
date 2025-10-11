@@ -6,10 +6,10 @@ import PaginationDemo from "./components/PaginationDemo.vue";
 
 <template>
   <div>
-    <el-divider>Pagination 组件的二次封装</el-divider>
-    <PaginationDemo></PaginationDemo>
     <el-divider>Form 组件的二次封装</el-divider>
     <FromDemo></FromDemo>
+    <el-divider>Pagination 组件的二次封装</el-divider>
+    <PaginationDemo></PaginationDemo>
     <el-divider>Table 组件的二次封装</el-divider>
     <TableDemo />
   </div>
